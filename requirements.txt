@@ -1,6 +1,7 @@
 # app
 sqlalchemy<2
-flask
+fastapi
+uvicorn
 psycopg2-binary
 redis
 
