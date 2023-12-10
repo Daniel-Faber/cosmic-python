@@ -3,11 +3,11 @@ import threading
 import time
 import traceback
 from typing import List
-from unittest.mock import Mock
 import pytest
 from allocation.domain import model
 from allocation.service_layer import unit_of_work
 from ..random_refs import random_sku, random_batchref, random_orderid
+from src.allocation.adapters.orm import generate_uuid
 
 pytestmark = pytest.mark.usefixtures("mappers")
 
@@ -18,9 +18,9 @@ def insert_batch(session, ref, sku, qty, eta, product_version=1):
         dict(sku=sku, version=product_version),
     )
     session.execute(
-        "INSERT INTO batches (reference, sku, _purchased_quantity, eta)"
-        " VALUES (:ref, :sku, :qty, :eta)",
-        dict(ref=ref, sku=sku, qty=qty, eta=eta),
+        "INSERT INTO batches (id, reference, sku, _purchased_quantity, eta)"
+        " VALUES (:id, :ref, :sku, :qty, :eta)",
+        dict(id=generate_uuid(), ref=ref, sku=sku, qty=qty, eta=eta),
     )
 
 

@@ -10,6 +10,7 @@ from sqlalchemy import (
     event,
 )
 from sqlalchemy.orm import mapper, relationship
+from uuid import uuid4
 
 from allocation.domain import model
 
@@ -17,10 +18,13 @@ logger = logging.getLogger(__name__)
 
 metadata = MetaData()
 
+def generate_uuid():
+    return str(uuid4())
+
 order_lines = Table(
     "order_lines",
     metadata,
-    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("id", String, primary_key=True, default=generate_uuid),
     Column("sku", String(255)),
     Column("qty", Integer, nullable=False),
     Column("orderid", String(255)),
@@ -36,7 +40,7 @@ products = Table(
 batches = Table(
     "batches",
     metadata,
-    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("id", String, primary_key=True, default=generate_uuid),
     Column("reference", String(255)),
     Column("sku", ForeignKey("products.sku")),
     Column("_purchased_quantity", Integer, nullable=False),
@@ -46,7 +50,7 @@ batches = Table(
 allocations = Table(
     "allocations",
     metadata,
-    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("id", String, primary_key=True, default=generate_uuid),
     Column("orderline_id", ForeignKey("order_lines.id")),
     Column("batch_id", ForeignKey("batches.id")),
 )
