@@ -70,7 +70,6 @@ def start_mappers():
             "_allocations": relationship(
                 lines_mapper,
                 secondary=allocations,
-                collection_class=set,
             )
         },
     )

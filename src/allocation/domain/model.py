@@ -1,8 +1,8 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date
-from typing import Optional, List, Set
-from . import commands, events
+from typing import Optional, List
+from . import events
 
 
 class Product:
@@ -51,7 +51,7 @@ class Batch:
         self.sku = sku
         self.eta = eta
         self._purchased_quantity = qty
-        self._allocations = set()  # type: Set[OrderLine]
+        self._allocations: List[OrderLine] = []
 
     def __repr__(self):
         return f"<Batch {self.reference}>"
@@ -72,8 +72,8 @@ class Batch:
         return self.eta > other.eta
 
     def allocate(self, line: OrderLine):
-        if self.can_allocate(line):
-            self._allocations.add(line)
+        if self.can_allocate(line) and (line not in self._allocations):
+            self._allocations.append(line)
 
     def deallocate_one(self) -> OrderLine:
         return self._allocations.pop()
